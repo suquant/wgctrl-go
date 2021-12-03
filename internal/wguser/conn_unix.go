@@ -11,6 +11,12 @@ import (
 	"path/filepath"
 )
 
+var (
+	// It seems that /var/run is a common location between Linux and the
+	// BSDs, even though it's a symlink on Linux.
+	socketDirectory = "/var/run/wireguard"
+)
+
 // dial is the default implementation of Client.dial.
 func dial(device string) (net.Conn, error) {
 	return net.Dial("unix", device)
@@ -19,9 +25,7 @@ func dial(device string) (net.Conn, error) {
 // find is the default implementation of Client.find.
 func find() ([]string, error) {
 	return findUNIXSockets([]string{
-		// It seems that /var/run is a common location between Linux and the
-		// BSDs, even though it's a symlink on Linux.
-		"/var/run/wireguard",
+		socketDirectory,
 	})
 }
 
